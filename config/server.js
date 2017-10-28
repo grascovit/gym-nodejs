@@ -1,10 +1,10 @@
-const port = 3003
+import express from 'express'
+import bodyParser from 'body-parser'
+import allowCors from './cors'
+import queryParser from 'express-query-int'
 
-const bodyParser = require('body-parser')
-const express = require('express')
+const port = 3003
 const server = express()
-const allowCors = require('./cors')
-const queryParser = require('express-query-int')
 
 server.use(bodyParser.urlencoded({ extended: true }))
 server.use(bodyParser.json())

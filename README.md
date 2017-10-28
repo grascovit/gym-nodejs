@@ -16,5 +16,5 @@ $ npm install
 ## Run
 Para rodar o projeto, execute:
 ```
-$ npm run dev
+$ npm start
 ```
