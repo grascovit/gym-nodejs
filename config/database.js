@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 module.exports = mongoose.connect('mongodb://localhost/gym')
 
 mongoose.Error.messages.general.required = "O atributo '{PATH}' é obrigatório."

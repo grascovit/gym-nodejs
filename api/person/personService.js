@@ -1,26 +1,56 @@
-const _ = require('lodash')
-const Person = require('./person')
+import mongoose from 'mongoose'
 
-Person.methods(['get', 'post', 'put', 'delete'])
-Person.updateOptions({new: true, runValidators: true})
+const Person = mongoose.model('Person')
 
-Person.after('post', sendErrorsOrNext).after('put', sendErrorsOrNext)
+exports.listPeople = (req, res) =>{
+    Person.find({}, function(err, people) {
+        if (err)
+            res.send(err);
+        res.json(people);
+    });
+};
 
-function sendErrorsOrNext(req, res, next) {
-  const bundle = res.locals.bundle
+exports.createPerson = (req, res) =>{
+    var newPerson = new Person(req.body);
 
-  if(bundle.errors) {
-    var errors = parseErrors(bundle.errors)
-    res.status(500).json({errors})
-  } else {
-    next()
-  }
-}
+    Person.findOneAndUpdate(
+        {registry_number: newPerson.registry_number},
+        {name: newPerson.name, birth: newPerson.birth},
+        {upsert: true},
 
-function parseErrors(nodeRestfulErrors) {
-  const errors = []
-  _.forIn(nodeRestfulErrors, error => errors.push(error.message))
-  return errors
-}
+        function(err, person) {
+        if (err)
+            res.send(err);
 
-module.exports = Person
+        res.send(person)
+    });
+
+};
+
+exports.readPerson = (req, res) =>{
+    Person.findOne({registry_number: req.params.registry_number}, function(err, person) {
+        if (err)
+            res.send(err);
+        res.json(person);
+    });
+};
+
+exports.removePerson = (req, res) =>{
+    Person.findOneAndRemove({registry_number: req.params.registry_number}, function(err, person) {
+        if (err)
+            res.send(err);
+        res.json(person);
+    });
+};
+
+exports.updatePerson = (req, res) =>{
+    var newPerson = new Person(req.body);
+    Person.findOneAndUpdate({registry_number: req.params.registry_number},
+        newPerson,
+        {new: true},
+        function(err, person) {
+        if (err)
+            res.send(err);
+        res.json(person);
+    });
+};
