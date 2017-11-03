@@ -21,7 +21,11 @@ exports.createPerson = (req, res) =>{
         function(err, person) {
             if (err)
                 res.send(err)
-            res.json(person)
+            Person.findOne({registry_number: newPerson.registry_number}, function(err, person) {
+                if (err)
+                    res.send(err)
+                res.json(person)
+            })
         })
 }
 
@@ -52,6 +56,10 @@ exports.updatePerson = (req, res) =>{
         function(err, person) {
             if (err)
                 res.send(err)
-            res.json(person)
+            Person.findOne({registry_number: newPerson.registry_number}, function(err, person) {
+                if (err)
+                    res.send(err)
+                res.json(person)
+            })
         })
 }
